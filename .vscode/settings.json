@@ -1,0 +1,7 @@
+{
+    "postman.settings.dotenv-detection-notification-visibility": false,
+    "files.exclude": {
+    "**/._*": true
+  },
+  "editor.inlineSuggest.enabled": false
+}
