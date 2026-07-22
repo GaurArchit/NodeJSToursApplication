@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
     }
 })
 
-//Document middleware before or after saving the data 
+//Document middleware before  saving the data 
 userSchema.pre('save',async function(next){
     if(!this.isModified('password')) return next();
     //hash the password the cost of 12 
