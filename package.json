@@ -4,9 +4,11 @@
   "description": "Node Js Revision Final ",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js",
-    "debug": "node --inspect-brk server.js"
-  },
+  "start": "node server.js",
+  "dev": "nodemon server.js",
+  "lint": "eslint .",
+  "test": "node --test"
+},
   "author": "",
   "license": "ISC",
   "dependencies": {
