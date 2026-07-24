@@ -1,4 +1,3 @@
-
 class APIFeatures {
   constructor(query, queryString) {
     this.query = query; //Tour.find()
@@ -16,7 +15,7 @@ class APIFeatures {
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
     console.log('This is line number 38', JSON.parse(queryStr));
     this.query = this.query.find(JSON.parse(queryStr));
-    console.log("This is in the apiFeatures line number 19 ",this);
+    console.log('This is in the apiFeatures line number 19 ', this);
     return this; // we use retun this because it return the same object query and queryString in the updated state which can be used by the next function
   }
   // eslint-disable-next-line lines-between-class-members
@@ -40,7 +39,7 @@ class APIFeatures {
       this.query = this.query.select('-__v');
     }
     return this;
-  } 
+  }
   // eslint-disable-next-line lines-between-class-members
   pagination() {
     //5 Pagination

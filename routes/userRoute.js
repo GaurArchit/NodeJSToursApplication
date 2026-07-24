@@ -1,12 +1,13 @@
 /* eslint-disable import/extensions */
 const express = require('express');
-const authController=require('../controller/authController.js');
+const authController = require('../controller/authController.js');
+
 const router = express.Router();
 // eslint-disable-next-line prettier/prettier
 const userController = require("../controller/userController.js");
 
-router.post('/signup',authController.signup);
-router.post('/login',authController.login);
+router.post('/signup', authController.signup);
+router.post('/login', authController.login);
 router
   .route('/')
   .get(userController.getAlluser)

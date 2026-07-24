@@ -16,7 +16,7 @@ exports.aliasTopTours = (req, res, next) => {
 exports.getAllTours = async (req, res) => {
   try {
     //Execute the query
-    console.log("this is the value of req.query" ,req.query);
+    console.log('this is the value of req.query', req.query);
     const features = new APIFeatures(Tour.find(), req.query)
       .filter()
       .sort()
@@ -38,7 +38,7 @@ exports.getAllTours = async (req, res) => {
   }
 };
 
-exports.getTour = async (req, res,next) => {
+exports.getTour = async (req, res, next) => {
   try {
     console.log(req.params);
     const tourId = await Tour.findById(req.params.id); // This command help us to find data based on the param entered
@@ -54,7 +54,6 @@ exports.getTour = async (req, res,next) => {
     res.status(400).send('Wrong Id selected');
   }
 };
- 
 
 exports.createTour = async (req, res) => {
   try {
