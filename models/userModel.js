@@ -31,6 +31,7 @@ const userSchema = new mongoose.Schema({
       },
     },
   },
+  passwordChangedAT: Date
 });
 
 //Document middleware before  saving the data
@@ -50,6 +51,14 @@ userSchema.methods.correctPassword = async function (
 ) {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
+userSchema.methods.changedPasswordAfter= function(JWTTImestamp){
+  if(this.passwordChangedAT){
+    const changedTimeStamp= parseInt(this.passwordChangedAT.getTime()/1000);
+    console.log("This is inside the usermodule line 56",JWTTImestamp,changedTimeStamp,JWTTImestamp<changedTimeStamp)
+    return JWTTImestamp<changedTimeStamp;
+  }
+}
+
 
 const User = mongoose.model('users', userSchema);
 

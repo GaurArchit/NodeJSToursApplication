@@ -1,7 +1,7 @@
 const express = require('express');
 // eslint-disable-next-line import/extensions
 const tourController = require('../controller/tourController');
-
+const authController =require('./../controller/authController')
 const router = express.Router();
 // router.param('param',(req,res,next,val)=>{
 //     console.log(`This is the selected tour ${val}`)
@@ -22,7 +22,7 @@ router.route('/lookup-result').get(tourController.getLookup);
 
 router
   .route('/')
-  .get(tourController.getAllTours)
+  .get(authController.protect,tourController.getAllTours) //Creating procted routes in JWT tokens 
   .post(tourController.createTour);
 router
   .route('/:id')
