@@ -22,7 +22,7 @@ exports.getAllTours = async (req, res) => {
       .sort()
       .limitFields()
       .pagination();
-    const tours = await features.query;
+    const tours = await features.query; //this is same as tours= await query. 
     res.status(200).json({
       status: 'success',
       resultLength: tours.length,
