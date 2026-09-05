@@ -93,11 +93,12 @@ exports.updateTour = async (req, res) => {
 
 exports.deleteTour = async (req, res) => {
   try {
-    const deletedTour = await Tour.findByIdAndDelete(req.params.param);
+    const deletedTour = await Tour.findByIdAndDelete(req.params.id);
     const finalTourCount = await Tour.find();
     console.log(deletedTour);
     console.log(finalTourCount);
     res.status(200).json({
+      resultLength:finalTourCount.length,
       status: 'success',
       data: {
         tour: finalTourCount,
