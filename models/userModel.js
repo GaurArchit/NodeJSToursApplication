@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const crypto =require('crypto')
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -36,8 +37,19 @@ const userSchema = new mongoose.Schema({
     enum:['user','guide','lead-guide','admin'],
     default:'user'
   },
-  passwordChangedAT: Date
+  passwordChangedAT: Date,
+  passwordResetToken: String,
+  passwordResetExpires: Date,
 });
+
+
+//When ever a user is saved or created
+userSchema.pre('save',function(next){
+  if(!this.isModified('password')||this.isNew)
+    return next();
+  this.passwordChangedAT=Date.now();
+  next();
+})
 
 //Document middleware before  saving the data
 userSchema.pre('save', async function (next) {
@@ -49,6 +61,7 @@ userSchema.pre('save', async function (next) {
   this.passwordConfirm = undefined;
   next();
 });
+
 
 userSchema.methods.correctPassword = async function (
   candidatePassword,
@@ -64,6 +77,13 @@ userSchema.methods.changedPasswordAfter= function(JWTTImestamp){
   }
 }
 
+userSchema.methods.createPasswordResetToken=function(){
+  const resetToken = crypto.randomBytes(32).toString('hex');
+    this.passwordResetToken=crypto.createHash('sha256').update(resetToken).digest('hex');
+    this.passwordResetExpires=Date.now()+10*60*1000;
+    console.log({resetToken},this.passwordResetToken);
+    return resetToken;
+}
 
 const User = mongoose.model('users', userSchema);
 
