@@ -4,10 +4,18 @@ const authController = require('../controller/authController.js');
 
 const router = express.Router();
 // eslint-disable-next-line prettier/prettier
-const userController = require("../controller/userController.js");
+const userController = require('../controller/userController.js');
 
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
+router.post('/forgotPassword', authController.forgotPassword);
+router.patch('/resetPassword/:token', authController.resetPassword);
+router.patch(
+  '/updateCurrentPassword',
+  authController.protect,
+  authController.updatePassword,
+);
+
 router
   .route('/')
   .get(userController.getAlluser)
