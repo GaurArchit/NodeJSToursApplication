@@ -2,8 +2,7 @@
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
-
-
+//Checking the git error 
 const filterObj =(obj,...allowedFileds)=>{
   const newObj={}
   Object.keys(obj).forEach(el=>{
@@ -42,7 +41,6 @@ exports.updateMe= catchAsync(async(req,res,next)=>{
  const filterBody =filterObj(req.body,'name','email');
  //3, Update the user document 
 const updatedUser =await User.findByIdAndUpdate(req.user.id,filterBody,{new:true,runValidators:true});
-
 
 res.status(200).json({
   statu:"Success",
