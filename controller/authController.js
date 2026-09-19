@@ -58,6 +58,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
   ) {
+    console.log(req.headers);
     token = req.headers.authorization.split(' ')[1];
   }
 
@@ -137,28 +138,31 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     passwordResetToken: hashedToken,
     passwordResetExpires: { $gt: Date.now() },
   });
-  if(!user){
-    return new(new AppError('Token has expired'));
+
+  if (!user) {
+    return next(new AppError('Token is invalid or has expired', 400));
   }
-  user.password=req.body.password;
-  user.passwordConfirm=req.body.passwordConfirm;
-  user.passwordResetToken=undefined;
-  user.passwordResetExpires=undefined;
+
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
   await user.save();
-  //2. If token has not expired and there is user ,set the new password
+
+  //2. If token has not expired and there is user, set the new password
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
   res.status(200).json({
-    status:"Success",
-    token
-  })
+    status: 'Success',
+    token,
+  });
   //3. Update changedPassowordAT property for the user
 });
 exports.updatePassword=catchAsync(async(req,res,next)=>{
   // 1. Get the authenticated user with the stored password.
-  console.log(req.user)
+  console.log("this is current user :",req.user)
 
   const user = await User.findById(req.user.id).select('+password');
   // 2. Check whether the current password is correct.
