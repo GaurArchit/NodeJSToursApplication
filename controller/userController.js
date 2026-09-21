@@ -11,12 +11,17 @@ const filterObj =(obj,...allowedFileds)=>{
   return newObj
 }
 
-exports.getAlluser = (req, res) => {
-  res.status(500).json({
-    status: 'not yet updated',
-    message: 'This route is not impletmented yet ',
-  });
-};
+exports.getAlluser = catchAsync(async(req,res,next)=>{
+const user =await User.find()
+res.status(200).json({
+  status:'Success',
+  resultLength:user.length,
+  data:{
+    user
+  }
+})
+
+})
 
 exports.createUser = (req, res) => {
   res.status(500).json({
@@ -31,6 +36,15 @@ exports.getUser = (req, res) => {
     message: 'This route is not impletmented yet ',
   });
 };
+
+exports.deleteMe =catchAsync(async(req,res,next)=>{
+
+  await User.findByIdAndUpdate(req.user.id,{active:false})
+  res.status(204).json({
+    status:'success',
+    data:null
+  })
+})
 
 exports.updateMe= catchAsync(async(req,res,next)=>{
  //1. Create error if user Post password data.

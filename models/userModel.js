@@ -40,9 +40,13 @@ const userSchema = new mongoose.Schema({
   passwordChangedAT: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
+  active:{
+    type:Boolean,
+    default:true,
+    select:false
+  }
 });
-
-
+//Below are the document middleware which means it only works in case of save and create pre and post 
 //When ever a user is saved or created
 userSchema.pre('save',function(next){
   if(!this.isModified('password')||this.isNew)
@@ -62,6 +66,14 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+
+//Query middleware these type of middleware works only in case of find and associated query methods 
+
+userSchema.pre(/^find/, function(next){
+  //this points to the present query 
+  this.find({active:{$ne:false}})
+  next();
+})
 
 userSchema.methods.correctPassword = async function (
   candidatePassword,
