@@ -2,8 +2,7 @@
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
-
-
+//Checking the git error 
 const filterObj =(obj,...allowedFileds)=>{
   const newObj={}
   Object.keys(obj).forEach(el=>{
@@ -12,12 +11,17 @@ const filterObj =(obj,...allowedFileds)=>{
   return newObj
 }
 
-exports.getAlluser = (req, res) => {
-  res.status(500).json({
-    status: 'not yet updated',
-    message: 'This route is not impletmented yet ',
-  });
-};
+exports.getAlluser = catchAsync(async(req,res,next)=>{
+const user =await User.find()
+res.status(200).json({
+  status:'Success',
+  resultLength:user.length,
+  data:{
+    user
+  }
+})
+
+})
 
 exports.createUser = (req, res) => {
   res.status(500).json({
@@ -33,6 +37,15 @@ exports.getUser = (req, res) => {
   });
 };
 
+exports.deleteMe =catchAsync(async(req,res,next)=>{
+
+  await User.findByIdAndUpdate(req.user.id,{active:false})
+  res.status(204).json({
+    status:'success',
+    data:null
+  })
+})
+
 exports.updateMe= catchAsync(async(req,res,next)=>{
  //1. Create error if user Post password data.
  if(req.body.password || req.body.passwordConfirm){
@@ -42,7 +55,6 @@ exports.updateMe= catchAsync(async(req,res,next)=>{
  const filterBody =filterObj(req.body,'name','email');
  //3, Update the user document 
 const updatedUser =await User.findByIdAndUpdate(req.user.id,filterBody,{new:true,runValidators:true});
-
 
 res.status(200).json({
   statu:"Success",

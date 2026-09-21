@@ -18,6 +18,14 @@ exports.signup = catchAsync(async (req, res) => {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
+  const cookieOption={
+    expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE*24*60*60*1000),
+    httpOnly:true
+  }
+  res.cookie('jwt',token,cookieOption)
+   newUser.password=undefined;
+
+  if(process.env.NODE_ENV==='production') cookieOption.secure=true;
   res.status(201).json({
     status: 'Success',
     token,
