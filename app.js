@@ -5,13 +5,36 @@ const globalError = require('./controller/errorController');
 // eslint-disable-next-line import/extensions
 const tourRouter = require('./routes/tourRoute');
 const userRouter = require('./routes/userRoute');
+const rateLimit =require('express-rate-limit');
+const helmet = require('helmet')
+const mongoSanitize = require('express-mongo-sanitize');
+const xss =require('xss-clean');
+const hpp= require('hpp');
 
 const app = express();
+//Set Security http
+app.use(helmet());
+//Global middleware to limti the number of request that are coming from 1 IP
+ 
+const limiter =rateLimit({
+  max:100,
+  windowMs: 60*60*1000,
+  message:"Too many request from this IP, please try again in an hour" 
+});
+app.use('/api',limiter);
 
 // MIDDLEWARES
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+//Data sanitization against NoSql quey injection 
+app.use(mongoSanitize());
+
+//Data sanitization against XSS
+app.use(xss());
+app.use(hpp({
+  whitelist:['duration' ,'ratingsQuantity','ratingsAverage','maxGroupSize','difficulty','price']
+}));
 
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
@@ -43,6 +66,8 @@ app.all('*', (req, res, next) => {
   // err.statusCode=404;
   next(new AppError(`Cant find ${req.originalUrl} on the server`, 404));
 });
+
+
 
 app.use(globalError);
 console.log('app.js is loaded and running ');

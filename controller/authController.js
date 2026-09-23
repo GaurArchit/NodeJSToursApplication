@@ -23,7 +23,10 @@ exports.signup = catchAsync(async (req, res) => {
     httpOnly:true
   }
   res.cookie('jwt',token,cookieOption)
+  //remove the password from the output as select= false only works on query like find
    newUser.password=undefined;
+
+   //res.cookie("testing","Here I am just sending data"); I can send multiple cookies
 
   if(process.env.NODE_ENV==='production') cookieOption.secure=true;
   res.status(201).json({
